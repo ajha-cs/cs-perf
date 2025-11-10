@@ -13,7 +13,7 @@ jobs:
           command: |
             echo "export GOPROXY=https://token:${CLOUDSMITH_TOKEN}@golang.cloudsmith.io/${CLOUDSMITH_ORG}/${CLOUDSMITH_REPO}/" >> "$BASH_ENV"
             echo "export GONOSUMDB=cloudsmith.io" >> "$BASH_ENV"
-      
+
       - run:
           name: Download Go modules
           command: go mod download
