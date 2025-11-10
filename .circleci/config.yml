@@ -19,7 +19,7 @@ jobs:
     steps:
       - run:
           name: configure cloudsmith
-          command: echo "export GOPROXY='https://token:$CLOUDSMITH_TOKEN_GO@golang.cloudsmith.io/$CLOUDSMITH_ORG/$CLOUDSMITH_REPO/,direct'" >> "$BASH_ENV"
+          command: echo "export GOPROXY='https://token:$CLOUDSMITH_TOKEN@golang.cloudsmith.io/$CLOUDSMITH_ORG/$CLOUDSMITH_REPO/,direct'" >> "$BASH_ENV"
       - setup-go
 
 executors:
