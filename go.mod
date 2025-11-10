@@ -1,6 +1,6 @@
-module cloudsmith.io/orgcs/gorepo/usinggorightway
+module github.com/pete-woods/cloudsmith-test
 
-go 1.24.1
+go 1.25.4
 
 require (
 	github.com/alecthomas/kong v1.12.1
@@ -411,4 +411,18 @@ require (
 	sigs.k8s.io/randfill v1.0.0 // indirect
 	sigs.k8s.io/structured-merge-diff/v4 v4.6.0 // indirect
 	sigs.k8s.io/yaml v1.4.0 // indirect
+)
+
+replace (
+	github.com/alexedwards/scs/pgxstore v0.0.0-20240316134038-7e11d57e8885 => github.com/pete-woods/scs/pgxstore v0.0.0-20250307145052-97e2bbbe5523
+	github.com/alexedwards/scs/v2 v2.8.0 => github.com/pete-woods/scs/v2 v2.0.0-20250307145052-97e2bbbe5523
+	github.com/auth0/go-auth0 v1.19.0 => github.com/pete-woods/go-auth0 v0.0.0-20250422104604-ec46c8acdfe3
+)
+
+tool (
+	github.com/abice/go-enum
+	github.com/golangci/golangci-lint/v2/cmd/golangci-lint
+	github.com/rinchsan/gosimports/cmd/gosimports
+	golang.org/x/tools/cmd/godoc
+	gotest.tools/gotestsum
 )

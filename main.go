@@ -1,7 +1,6 @@
 package main
 
 import (
-	_ "fmt"
 	_ "github.com/alecthomas/kong"
 	_ "github.com/alexedwards/scs/pgxstore"
 	_ "github.com/alexedwards/scs/v2"
@@ -39,10 +38,7 @@ import (
 	_ "google.golang.org/grpc"
 	_ "gotest.tools/v3"
 	_ "k8s.io/klog/v2"
-	_ "cloudsmith.io/orgcs/gorepo/usinggorightway/pkg"
 )
 
 func main() {
-	message := pkg.Greet("World")
-	fmt.Println(message)
 }
