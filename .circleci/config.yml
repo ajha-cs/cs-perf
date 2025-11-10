@@ -1,0 +1,101 @@
+version: 2.1
+
+# Define executors
+executors:
+  go-executor:
+    docker:
+      - image: cimg/go:1.21
+    working_directory: ~/project
+
+# Define jobs
+jobs:
+  build:
+    executor: go-executor
+    steps:
+      - checkout
+      
+      # Configure Cloudsmith as a Go proxy
+      - run:
+          name: Configure Cloudsmith Go Registry
+          command: |
+            # Set GOPROXY to use Cloudsmith registry
+            echo "export GOPROXY='https://token:${CLOUDSMITH_TOKEN}@golang.cloudsmith.io/orgcs/gorepo/,direct'" >> $BASH_ENV
+            source $BASH_ENV
+            
+            # Configure git to use authentication for private repos
+            git config --global url."https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/circleci/".insteadOf "https://github.com/circleci/"
+      
+      - run:
+          name: Verify Go Environment
+          command: |
+            go version
+            echo "GOPROXY: $GOPROXY"
+      
+      # Download dependencies
+      - run:
+          name: Download Dependencies
+          command: |
+            go mod download
+            go mod verify
+      
+      # Run tests
+      - run:
+          name: Run Tests
+          command: |
+            go test -v ./...
+      
+      # Build the application
+      - run:
+          name: Build Application
+          command: |
+            go build -v ./...
+      
+      # Optional: Save artifacts
+      - store_artifacts:
+          path: ./bin
+          destination: binaries
+
+  # Optional: Separate test job
+  test:
+    executor: go-executor
+    steps:
+      - checkout
+      
+      - run:
+          name: Configure Cloudsmith Go Registry
+          command: |
+            echo "export GOPROXY='https://token:${CLOUDSMITH_TOKEN}@golang.cloudsmith.io/orgcs/gorepo/,direct'" >> $BASH_ENV
+            source $BASH_ENV
+            git config --global url."https://${GITHUB_USER}:${GITHUB_TOKEN}@github.com/circleci/".insteadOf "https://github.com/circleci/"
+      
+      - run:
+          name: Download Dependencies
+          command: go mod download
+      
+      - run:
+          name: Run Unit Tests
+          command: |
+            go test -v -race -coverprofile=coverage.txt -covermode=atomic ./...
+      
+      - store_test_results:
+          path: /tmp/test-results
+      
+      - store_artifacts:
+          path: coverage.txt
+          destination: coverage
+
+# Define workflows
+workflows:
+  version: 2
+  build-and-test:
+    jobs:
+      - build:
+          context:
+            - cloudsmith-credentials
+            - github-credentials
+      - test:
+          context:
+            - cloudsmith-credentials
+            - github-credentials
+          requires:
+            - build
