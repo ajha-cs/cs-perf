@@ -19,14 +19,14 @@ jobs:
     steps:
       - run:
           name: configure cloudsmith
-          command: echo "export GOPROXY='https://token:$CLOUDSMITH_TOKEN_GO@golang.cloudsmith.io/circleci-wkop/go-mods/,direct'" >> "$BASH_ENV"
+          command: echo "export GOPROXY='https://token:$CLOUDSMITH_TOKEN_GO@golang.cloudsmith.io/$CLOUDSMITH_ORG/$CLOUDSMITH_REPO/,direct'" >> "$BASH_ENV"
       - setup-go
 
 executors:
   go:
     docker:
       - image: cimg/go:1.25
-    working_directory: /mnt/ramdisk
+    working_directory: ./
     resource_class: large
 
 commands:
