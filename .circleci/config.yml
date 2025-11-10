@@ -1,28 +1,38 @@
 version: 2.1
 
+workflows:
+  main:
+    jobs:
+      - go-plain
+      - go-cloudsmith
+
 jobs:
-  build:
+  go-plain:
+    executor: go
+    parallelism: 5
+    steps:
+      - setup-go
+
+  go-cloudsmith:
+    executor: go
+    parallelism: 5
+    steps:
+      - run:
+          name: configure cloudsmith
+          command: echo "export GOPROXY='https://token:$CLOUDSMITH_TOKEN_GO@golang.cloudsmith.io/circleci-wkop/go-mods/,direct'" >> "$BASH_ENV"
+      - setup-go
+
+executors:
+  go:
     docker:
       - image: cimg/go:1.25
-    
+    working_directory: /mnt/ramdisk
+    resource_class: large
+
+commands:
+  setup-go:
     steps:
       - checkout
-      
       - run:
-          name: Configure Cloudsmith Go Registry
-          command: |
-            echo "export GOPROXY=https://token:${CLOUDSMITH_TOKEN}@golang.cloudsmith.io/${CLOUDSMITH_ORG}/${CLOUDSMITH_REPO}/" >> "$BASH_ENV"
-            echo "export GONOSUMDB=cloudsmith.io" >> "$BASH_ENV"
-
-      - run:
-          name: Download Go modules
+          name: Install dependencies
           command: go mod download
-      
-      - run:
-          name: Build
-          command: go build
-
-workflows:
-  build-workflow:
-    jobs:
-      - build
