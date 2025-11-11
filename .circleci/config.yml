@@ -34,5 +34,5 @@ commands:
     steps:
       - checkout
       - run:
-          name: Install dependencies
+          name: Install dependencies 👀
           command: go mod download -x -json
