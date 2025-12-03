@@ -3,6 +3,11 @@ module github.com/pete-woods/cloudsmith-test
 go 1.25.4
 
 require (
+	"bufio"
+    "fmt"
+    "os"
+    "strconv"
+    "strings"
 	github.com/alecthomas/kong v1.12.1
 	github.com/alexedwards/scs/pgxstore v0.0.0-20240316134038-7e11d57e8885
 	github.com/alexedwards/scs/v2 v2.8.0
